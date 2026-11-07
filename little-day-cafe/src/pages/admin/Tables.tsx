@@ -82,7 +82,7 @@ export function Tables() {
       <Dialog open={!!issued} onClose={() => setIssued(null)} title={issued ? `QR โต๊ะ ${issued.code}` : ''} sheet>
         {issued && (
           <div className="print-area flex flex-col items-center gap-4 text-center">
-            <p className="text-sm text-coffee-mute">LITTLE DAY CAFE · โต๊ะ {issued.code}</p>
+            <p className="text-sm text-coffee-mute">128 HOME COFFEE · โต๊ะ {issued.code}</p>
             <QrImage text={menuUrl(issued.token)} size={260} />
             <p className="text-xs text-coffee-mute">แสดง QR นี้ให้ลูกค้าสแกนเพื่อสั่งที่โต๊ะ ค่านี้จะแสดงเพียงครั้งเดียว</p>
             <p data-testid="menu-url" className="break-all rounded-[10px] bg-ivory-deep px-3 py-2 font-mono text-[11px] text-coffee-mute">{menuUrl(issued.token)}</p>

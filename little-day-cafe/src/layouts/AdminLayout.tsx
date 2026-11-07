@@ -28,7 +28,7 @@ export function AdminLayout() {
     <div className="flex min-h-dvh bg-ivory">
       <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-1 border-r border-oat-soft bg-white p-4 lg:flex">
         <div className="mb-6 px-2">
-          <p className="text-[11px] tracking-[0.2em] text-coffee-mute">LITTLE DAY</p>
+          <p className="text-[11px] tracking-[0.2em] text-coffee-mute">128 HOME COFFEE</p>
           <p className="font-semibold">หลังร้าน</p>
         </div>
         {visible.map((i) => (

@@ -34,7 +34,7 @@ export function LoginPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-5 p-6">
       <div>
-        <p className="text-[11px] tracking-[0.2em] text-coffee-mute">LITTLE DAY</p>
+        <p className="text-[11px] tracking-[0.2em] text-coffee-mute">128 HOME COFFEE</p>
         <h1 className="text-2xl font-bold">เข้าสู่ระบบพนักงาน</h1>
       </div>
 

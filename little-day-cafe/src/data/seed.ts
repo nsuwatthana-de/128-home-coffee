@@ -82,7 +82,7 @@ export function seedDB(uid: () => string): LocalDB {
     stockTx: [],
     expenses: [],
     settings: {
-      shopName: 'LITTLE DAY CAFE',
+      shopName: '128 Home Coffee',
       phone: '',
       address: '',
       promptpayId: '',

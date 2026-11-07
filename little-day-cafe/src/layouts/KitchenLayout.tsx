@@ -21,7 +21,7 @@ export function KitchenLayout() {
     <div className="flex min-h-dvh flex-col bg-ivory">
       <header className="flex items-center justify-between border-b border-oat-soft bg-white px-4 py-3 md:px-6">
         <div>
-          <p className="text-[11px] tracking-[0.2em] text-coffee-mute">LITTLE DAY</p>
+          <p className="text-[11px] tracking-[0.2em] text-coffee-mute">128 HOME COFFEE</p>
           <p className="font-semibold">จอครัว</p>
         </div>
         <div className="flex items-center gap-2">

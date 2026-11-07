@@ -32,7 +32,7 @@ export interface PromptPayInput {
   reference?: string;
 }
 
-export function buildPromptPayPayload({ target, amount, merchantName = 'LITTLE DAY CAFE', reference }: PromptPayInput): string {
+export function buildPromptPayPayload({ target, amount, merchantName = '128 Home Coffee', reference }: PromptPayInput): string {
   if (!(amount > 0)) throw new Error('ยอดชำระต้องมากกว่า 0');
   const { subTag, value } = normalizeTarget(target);
   const parts = [
