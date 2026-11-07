@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+/* Design tokens: LITTLE DAY CAFE (Japanese Minimal) */
+@theme {
+  --color-ivory: #F5F0E8;
+  --color-ivory-deep: #EDE5D8;
+  --color-oat: #C8B69F;
+  --color-oat-soft: #E4D9CB;
+  --color-matcha: #6D8062;
+  --color-matcha-dark: #5A6B50;
+  --color-matcha-soft: #DDE5D5;
+  --color-terracotta: #A66F53;
+  --color-terracotta-ink: #8C5A40;
+  --color-terracotta-soft: #F1E2D9;
+  --color-coffee: #463D35;
+  --color-coffee-mute: #6F655B;
+  --color-white: #FFFFFF;
+
+  --font-thai: "IBM Plex Sans Thai", system-ui, sans-serif;
+  --font-sans: "DM Sans", "IBM Plex Sans Thai", system-ui, sans-serif;
+
+  --radius-card: 16px;
+  --radius-control: 12px;
+
+  --shadow-soft: 0 1px 2px rgb(70 61 53 / 0.06), 0 8px 24px rgb(70 61 53 / 0.06);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-ivory text-coffee antialiased;
+    font-family: var(--font-sans);
+    font-feature-settings: "palt";
+    line-height: 1.55;
+  }
+  :lang(th) body,
+  body:lang(th) {
+    font-family: var(--font-thai);
+  }
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1, h2, h3 {
+    letter-spacing: -0.01em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
