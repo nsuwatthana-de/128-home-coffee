@@ -1,6 +1,7 @@
 -- LITTLE DAY CAFE: schema, RLS, และ function สำหรับ Supabase (PostgreSQL)
 -- รันตามลำดับใน SQL Editor หรือ `supabase db push` ถ้าใช้ Supabase CLI
-create extension if not exists pgcrypto;
+create schema if not exists extensions;
+create extension if not exists pgcrypto with schema extensions;
 create sequence if not exists order_seq;
 
 -- ---------- บัญชีพนักงาน ----------
@@ -183,11 +184,11 @@ insert into shop_settings (id) values (1) on conflict do nothing;
 
 -- ---------- ฟังก์ชันช่วยตรวจสิทธิ์ ----------
 create or replace function current_role_name() returns text
-language sql stable security definer set search_path = public
+language sql stable security definer set search_path = public, extensions
 as $$ select role from profiles where id = auth.uid() $$;
 
 create or replace function require_role(allowed text[]) returns void
-language plpgsql stable security definer set search_path = public
+language plpgsql stable security definer set search_path = public, extensions
 as $$
 begin
   if current_role_name() is null or not (current_role_name() = any (allowed)) then
@@ -269,7 +270,7 @@ create policy settings_owner_write on shop_settings for update to authenticated
 
 -- ---------- Function: โต๊ะและ token ----------
 create or replace function resolve_table_token(p_token text) returns jsonb
-language sql stable security definer set search_path = public
+language sql stable security definer set search_path = public, extensions
 as $$
   select jsonb_build_object('tableId', t.id, 'code', t.code)
   from table_tokens tt join tables t on t.id = tt.table_id
@@ -279,7 +280,7 @@ $$;
 grant execute on function resolve_table_token(text) to anon, authenticated;
 
 create or replace function rotate_table_token(p_table uuid) returns text
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 declare
   v_token text;
@@ -297,7 +298,7 @@ grant execute on function rotate_table_token(uuid) to authenticated;
 create or replace function create_order(
   p_token text, p_channel text, p_customer text, p_note text, p_method text, p_items jsonb
 ) returns jsonb
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 declare
   v_table_id uuid;
@@ -436,7 +437,7 @@ grant execute on function create_order(text, text, text, text, text, jsonb) to a
 
 -- ---------- Function: อ่านออเดอร์ (ลูกค้าใช้ id ที่ไม่สามารถเดาได้) ----------
 create or replace function get_order_json(p_id uuid) returns jsonb
-language sql stable security definer set search_path = public
+language sql stable security definer set search_path = public, extensions
 as $$
   select jsonb_build_object(
     'id', o.id, 'no', o.order_no, 'channel', o.channel, 'status', o.status,
@@ -460,7 +461,7 @@ grant execute on function get_order_json(uuid) to anon, authenticated;
 
 -- ---------- Function: เปลี่ยนสถานะ / ยืนยันการชำระ / ปรับสต็อก ----------
 create or replace function set_order_status(p_id uuid, p_to text) returns void
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 declare
   v_order orders;
@@ -500,7 +501,7 @@ end $$;
 grant execute on function set_order_status(uuid, text) to authenticated;
 
 create or replace function confirm_payment(p_id uuid, p_method text, p_ref text) returns void
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 declare
   v_order orders;
@@ -522,7 +523,7 @@ end $$;
 grant execute on function confirm_payment(uuid, text, text) to authenticated;
 
 create or replace function adjust_stock(p_id uuid, p_delta numeric, p_reason text) returns void
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 begin
   perform require_role(array['owner', 'staff']);
