@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Button, Card } from '../ui';
 import { BrandLogo } from '../components/BrandLogo';
+import { DeveloperCredit } from '../components/DeveloperCredit';
 import { isRemote } from '../data';
 import { useAuth } from './AuthProvider';
 import type { Role } from '../types';
@@ -66,6 +67,7 @@ export function LoginPage() {
           ))}
         </Card>
       )}
+      <DeveloperCredit />
     </div>
   );
 }

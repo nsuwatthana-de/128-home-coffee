@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { cx } from '../lib/format';
 import { BrandLogo } from '../components/BrandLogo';
+import { DeveloperCredit } from '../components/DeveloperCredit';
 import { useAuth } from '../auth/AuthProvider';
 import { Button } from '../ui';
 import type { Role } from '../types';
@@ -42,6 +43,7 @@ export function AdminLayout() {
         <div className="mt-auto flex flex-col gap-2 px-2 text-xs text-coffee-mute">
           <span>{roleLabel}{session?.email ? ` · ${session.email}` : ''}</span>
           <Button variant="ghost" size="sm" onClick={async () => { await signOut(); navigate('/login'); }}>ออกจากระบบ</Button>
+          <DeveloperCredit className="mt-2 text-left" />
         </div>
       </aside>
 

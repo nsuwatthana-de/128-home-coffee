@@ -4,6 +4,7 @@ import { ProductCard } from '../../components/ProductCard';
 import { repo } from '../../data';
 import { useLive } from '../../hooks/useLive';
 import { useTable } from '../../table/TableProvider';
+import { DeveloperCredit } from '../../components/DeveloperCredit';
 
 export function Home() {
   const { status, code } = useTable();
@@ -57,6 +58,7 @@ export function Home() {
           </section>
         </>
       )}
+      <DeveloperCredit className="pb-2" />
     </div>
   );
 }
