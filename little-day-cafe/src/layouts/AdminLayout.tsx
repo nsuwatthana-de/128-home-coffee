@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { cx } from '../lib/format';
+import { BrandLogo } from '../components/BrandLogo';
 import { useAuth } from '../auth/AuthProvider';
 import { Button } from '../ui';
 import type { Role } from '../types';
@@ -28,8 +29,8 @@ export function AdminLayout() {
     <div className="flex min-h-dvh bg-ivory">
       <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-1 border-r border-oat-soft bg-white p-4 lg:flex">
         <div className="mb-6 px-2">
-          <p className="text-[11px] tracking-[0.2em] text-coffee-mute">128 HOME COFFEE</p>
-          <p className="font-semibold">หลังร้าน</p>
+          <BrandLogo className="h-14" />
+          <p className="mt-2 text-sm font-semibold text-coffee-mute">หลังร้าน</p>
         </div>
         {visible.map((i) => (
           <NavLink key={i.to} to={i.to} end={i.end}

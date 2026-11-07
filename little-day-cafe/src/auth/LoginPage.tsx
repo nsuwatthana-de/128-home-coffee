@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Button, Card } from '../ui';
+import { BrandLogo } from '../components/BrandLogo';
 import { isRemote } from '../data';
 import { useAuth } from './AuthProvider';
 import type { Role } from '../types';
@@ -34,7 +35,7 @@ export function LoginPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-5 p-6">
       <div>
-        <p className="text-[11px] tracking-[0.2em] text-coffee-mute">128 HOME COFFEE</p>
+        <BrandLogo className="mb-3 h-20" />
         <h1 className="text-2xl font-bold">เข้าสู่ระบบพนักงาน</h1>
       </div>
 

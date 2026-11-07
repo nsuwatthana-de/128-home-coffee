@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom';
 import { cx, baht } from '../lib/format';
+import { BrandLogo } from '../components/BrandLogo';
 import { TableProvider, useTable } from '../table/TableProvider';
 import { useCart } from '../cart/CartProvider';
 
@@ -24,10 +25,7 @@ function Shell() {
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[560px] flex-col bg-ivory md:max-w-[880px]">
       <header className="sticky top-0 z-20 flex items-center justify-between bg-ivory/95 px-4 pb-3 pt-[calc(env(safe-area-inset-top,0px)+14px)] backdrop-blur">
-        <div>
-          <p className="text-[11px] tracking-[0.2em] text-coffee-mute">128 HOME COFFEE</p>
-          <p className="text-lg font-semibold leading-tight">CAFE</p>
-        </div>
+        <BrandLogo className="h-11" />
         <TableBadge />
       </header>
 

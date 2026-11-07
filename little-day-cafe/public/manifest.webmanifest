@@ -9,6 +9,12 @@
   "lang": "th",
   "icons": [
     {
+      "src": "./logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
       "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
