@@ -31,9 +31,9 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: npm test
       - run: npm run typecheck
-      - name: Build (base path = repo name)
+      - name: Build (base path = repo name, auto-follows renames)
         env:
-          VITE_BASE: /turtle-money/
+          VITE_BASE: /${{ github.event.repository.name }}/
         run: |
           npm run build
           cp dist/index.html dist/404.html
