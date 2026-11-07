@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>สั่งอาหารที่โต๊ะ</title>
+<meta name="theme-color" content="#8B5E3C">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="customer">
+<header class="top">
+  <div>
+    <div class="shop" id="shop"></div>
+    <div class="table-badge" id="table"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+
+<main class="menu" id="menu"></main>
+
+<section class="track card" id="track" hidden>
+  <h2>สถานะออเดอร์ของคุณ</h2>
+  <div class="status-big" id="track-status"></div>
+  <div class="muted" id="track-items"></div>
+</section>
+
+<div class="bar" id="bar" hidden>
+  <span id="bar-text"></span>
+  <button id="open-cart">ดูตะกร้า</button>
+</div>
+
+<div class="sheet-backdrop" id="backdrop" hidden></div>
+<section class="sheet" id="sheet" hidden aria-label="ตะกร้า">
+  <div class="sheet-head">
+    <h2>ตะกร้า</h2>
+    <button id="close-cart" class="ghost" aria-label="ปิด">✕</button>
+  </div>
+  <div id="cart-lines"></div>
+  <div class="total-row"><span>รวม</span><b id="cart-total">฿0</b></div>
+  <label class="field">ชื่อ (ไม่บังคับ)
+    <input id="cname" maxlength="40" placeholder="เช่น คุณแพร">
+  </label>
+  <label class="field">หมายเหตุ (ไม่บังคับ)
+    <input id="note" maxlength="200" placeholder="เช่น ไม่ใส่น้ำตาล">
+  </label>
+  <p class="err" id="msg"></p>
+  <button class="primary big" id="submit" disabled>ส่งออเดอร์</button>
+</section>
+
+<script type="module" src="js/customer.js"></script>
+</body>
+</html>
