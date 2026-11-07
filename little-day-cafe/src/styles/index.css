@@ -53,3 +53,11 @@
     animation-duration: 0.01ms !important;
   }
 }
+
+/* พิมพ์ QR: แสดงเฉพาะพื้นที่พิมพ์ */
+@media print {
+  body * { visibility: hidden !important; }
+  .print-area, .print-area * { visibility: visible !important; }
+  .print-area { position: fixed; inset: 0; margin: auto; height: fit-content; }
+  .no-print { display: none !important; }
+}

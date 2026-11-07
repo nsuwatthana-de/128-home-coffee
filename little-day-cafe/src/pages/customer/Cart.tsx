@@ -1,24 +1,15 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, Card, EmptyState } from '../../ui';
 import { baht } from '../../lib/format';
-
-interface CartLine { id: string; name: string; options: string; price: number; qty: number }
-
-const initial: CartLine[] = [
-  { id: 'c1', name: 'Iced Latte', options: 'M · หวาน 50% · น้ำแข็งปกติ', price: 85, qty: 2 },
-  { id: 'c2', name: 'Strawberry Cake', options: '', price: 95, qty: 1 },
-];
+import { useCart } from '../../cart/CartProvider';
 
 export function Cart() {
-  // Phase 1: ข้อมูลตะกร้าเป็นตัวอย่าง ตะกร้าจริงจะเก็บสถานะใน Phase 2
-  const [lines, setLines] = useState<CartLine[]>(initial);
-  const total = lines.reduce((s, l) => s + l.price * l.qty, 0);
+  const { items, setQty, total, clear } = useCart();
+  const navigate = useNavigate();
+  const [confirmClear, setConfirmClear] = useState(false);
 
-  const change = (id: string, delta: number) =>
-    setLines((ls) => ls.map((l) => (l.id === id ? { ...l, qty: l.qty + delta } : l)).filter((l) => l.qty > 0));
-
-  if (lines.length === 0) {
+  if (items.length === 0) {
     return <EmptyState title="ตะกร้าว่างอยู่" description="เลือกเมนูที่ชอบแล้วกลับมาที่นี่ได้เลยค่ะ" action={<Link to="/menu" className="text-sm font-medium text-matcha-dark">ไปดูเมนู</Link>} />;
   }
 
@@ -26,30 +17,37 @@ export function Cart() {
     <div className="flex flex-col gap-4 pt-2">
       <h1 className="text-xl font-bold">ตะกร้า</h1>
       <ul className="flex flex-col gap-3">
-        {lines.map((l) => (
-          <li key={l.id}>
-          <Card className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-medium">{l.name}</p>
-              {l.options && <p className="text-xs text-coffee-mute">{l.options}</p>}
-              <p className="mt-1 text-sm font-semibold">{baht(l.price * l.qty)}</p>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <Button variant="secondary" size="sm" aria-label={`ลด ${l.name}`} onClick={() => change(l.id, -1)}>−</Button>
-              <span className="w-5 text-center font-medium" aria-live="polite">{l.qty}</span>
-              <Button variant="secondary" size="sm" aria-label={`เพิ่ม ${l.name}`} onClick={() => change(l.id, 1)}>+</Button>
-            </div>
-          </Card>
+        {items.map((l) => (
+          <li key={l.key}>
+            <Card className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-medium">{l.emoji} {l.name}</p>
+                {l.labels.length > 0 && <p className="text-xs text-coffee-mute">{l.labels.join(' · ')}</p>}
+                {l.note && <p className="text-xs text-terracotta-ink">หมายเหตุ: {l.note}</p>}
+                <p className="mt-1 text-sm font-semibold">{baht(l.unitPrice * l.qty)}</p>
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <Button variant="secondary" size="sm" aria-label={`ลด ${l.name}`} onClick={() => setQty(l.key, l.qty - 1)}>−</Button>
+                <span className="w-5 text-center font-medium" aria-live="polite">{l.qty}</span>
+                <Button variant="secondary" size="sm" aria-label={`เพิ่ม ${l.name}`} disabled={l.qty >= 20} onClick={() => setQty(l.key, l.qty + 1)}>+</Button>
+              </div>
+            </Card>
           </li>
         ))}
       </ul>
       <Card className="flex items-center justify-between">
-        <span className="text-coffee-mute">รวมทั้งหมด</span>
+        <span className="text-coffee-mute">รวมโดยประมาณ</span>
         <span className="text-xl font-bold">{baht(total)}</span>
       </Card>
-      <Link to="/checkout" className="contents">
-        <Button size="lg">ไปชำระเงิน</Button>
-      </Link>
+      <Button size="lg" onClick={() => navigate('/checkout')}>ไปชำระเงิน</Button>
+      {confirmClear ? (
+        <div className="flex gap-2">
+          <Button variant="danger" className="flex-1" onClick={() => { clear(); setConfirmClear(false); }}>ยืนยันล้างตะกร้า</Button>
+          <Button variant="ghost" className="flex-1" onClick={() => setConfirmClear(false)}>ยกเลิก</Button>
+        </div>
+      ) : (
+        <Button variant="ghost" onClick={() => setConfirmClear(true)}>ล้างตะกร้า</Button>
+      )}
     </div>
   );
 }

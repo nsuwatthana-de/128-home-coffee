@@ -247,28 +247,17 @@ Component ที่ต้องมีใน Phase 1: Button, Card, Badge, Tabs, 
 
 ## 8. Development Checklist
 
-Phase 0 (เอกสารนี้)
-- [x] สถาปัตยกรรม, ER, โครงโฟลเดอร์, User Journey, Design System, Wireframe
+Phase 0: เอกสารนี้ — เสร็จ
+Phase 1 — UI Foundation: เสร็จ (Design System, layouts, responsive)
+Phase 2 — Customer QR Ordering: เสร็จ ตะกร้าคงอยู่ในเบราว์เซอร์ ตรวจตัวเลือกและราคาที่ฝั่งเซิร์ฟเวอร์ (`create_order`)
+Phase 3 — Database & Backend: เสร็จ (schema, RLS, function, Auth ด้วยบทบาท `profiles`) ทดสอบ SQL ด้วย PostgreSQL จริง (PGlite)
+Phase 4 — QR Ordering: เสร็จ token ต่อโต๊ะ เก็บเป็น hash หมุนใหม่ได้ QR เดิมใช้ไม่ได้ทันที
+Phase 5 — Admin & POS: เสร็จ (ภาพรวม ออเดอร์ ขายหน้าร้าน สินค้า รับเงินสด และยืนยัน PromptPay ด้วยพนักงาน)
+Phase 6 — Kitchen Display: เสร็จ (realtime, กรองสถานี, เสียงแจ้งเตือน)
+Phase 7 — Inventory & Reports: เสร็จ (สต็อก สูตร ตัดสต็อกและคืนเมื่อยกเลิก รายงาน รายจ่าย ส่งออก CSV)
+Phase 8 — Testing & Deployment: ทดสอบเสร็จ (unit 22 รายการ, DB 1 ชุด, E2E ในเบราว์เซอร์) การ deploy จริงรอ credential ของ Vercel และ Supabase
 
-Phase 1 — UI Foundation (ทำตอนนี้)
-- [x] ตั้งค่า Vite + React + TypeScript + Tailwind + Router
-- [x] Design tokens และฟอนต์
-- [x] Design System components (Button, Card, Badge, Segmented, Input, Stat, EmptyState, Skeleton, Dialog)
-- [x] Layouts: Customer, Admin, Kitchen
-- [x] หน้า Customer: Home, Menu, ProductDetail, Cart, Checkout, OrderStatus (mock)
-- [x] หน้า Admin: Dashboard, Orders, Products, Tables (mock); Inventory, Promotions, Reports, Settings เป็นโครงหน้า
-- [x] หน้า Kitchen: Board (mock)
-- [x] Responsive: ตรวจที่ 390px (มือถือ), 1024px (แท็บเล็ต), 1280px (Desktop) ไม่มีการล้นแนวนอน
-- [x] Loading/Empty state มีใน Skeleton และ EmptyState; Error state ยังเป็นข้อความในหน้า (ครบจริงในเฟส 2–3)
-- [x] ตรวจ build, typecheck, และทดสอบการไหลพื้นฐานในเบราว์เซอร์
-
-Phase 2 — Customer QR Ordering: ตะกร้า, ราคา, โต๊ะจาก token, สร้างออเดอร์ผ่าน function
-Phase 3 — Database & Backend: schema, RLS, functions, Auth
-Phase 4 — QR Ordering (token โต๊ะ, Secure Table Session)
-Phase 5 — Admin & POS: จัดการสินค้า, ออเดอร์, Cash/PromptPay ด้วยการยืนยันโดยพนักงาน
-Phase 6 — Kitchen Display: Realtime
-Phase 7 — Inventory & Reports
-Phase 8 — Testing & Deployment
+หมายเหตุ: V2 (โปรโมชัน, สมาชิกและแต้ม, วิเคราะห์เชิงลึก) ยังไม่ได้ทำตามแผน
 
 ## 9. ประเด็นที่ยังต้องยืนยันกับเจ้าของร้าน
 

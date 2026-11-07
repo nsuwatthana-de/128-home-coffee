@@ -49,8 +49,8 @@ export function OrderCard({ order, actions }: { order: Order; actions?: ReactNod
       </ul>
 
       <div className="flex items-center justify-between border-t border-oat-soft pt-3 text-sm">
-        <span className={order.paid ? 'text-matcha-dark' : 'text-terracotta-ink'}>
-          {order.paid ? 'ชำระแล้ว' : 'ยังไม่ชำระ'} · {order.method === 'cash' ? 'เงินสด' : 'PromptPay'}
+        <span className={order.paymentStatus === 'paid' ? 'text-matcha-dark' : 'text-terracotta-ink'}>
+          {order.paymentStatus === 'paid' ? 'ชำระแล้ว' : 'ยังไม่ชำระ'} · {order.method === 'cash' ? 'เงินสด' : 'PromptPay'}
         </span>
         <span className="font-semibold">{baht(order.total)}</span>
       </div>

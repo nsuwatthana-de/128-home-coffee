@@ -1,0 +1,13 @@
+{
+  "name": "LITTLE DAY CAFE",
+  "short_name": "LITTLE DAY",
+  "description": "สั่งอาหารผ่าน QR และระบบหลังร้านของ LITTLE DAY CAFE",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F0E8",
+  "theme_color": "#F5F0E8",
+  "lang": "th",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
