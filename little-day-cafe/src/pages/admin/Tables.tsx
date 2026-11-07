@@ -15,6 +15,7 @@ export function Tables() {
   const [code, setCode] = useState('');
   const [issued, setIssued] = useState<{ code: string; token: string } | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [sheet, setSheet] = useState<{ code: string; token: string }[] | null>(null);
 
   useEffect(() => {
     if (!issued) { setDownloadUrl(null); return; }
@@ -29,6 +30,18 @@ export function Tables() {
     setCode('');
     return 'เพิ่มโต๊ะแล้ว กด "สร้าง QR" เพื่อออก QR ให้โต๊ะนี้';
   });
+
+  // QR เดิมพิมพ์ซ้ำไม่ได้ (ระบบเก็บเฉพาะ hash) จึงออก token ใหม่ให้ทุกโต๊ะที่เปิดใช้งาน แล้วพิมพ์เป็นใบเดียว
+  const printAll = () => {
+    const active = (data ?? []).filter((t) => t.active);
+    if (active.length === 0) { action.run('none', async () => { throw new Error('ยังไม่มีโต๊ะที่เปิดใช้งาน'); }); return; }
+    if (!confirm(`ออก QR ใหม่ให้ ${active.length} โต๊ะ? QR เดิมทั้งหมดจะใช้ไม่ได้ทันที และต้องเปลี่ยนป้าย QR บนโต๊ะ`)) return;
+    action.run('print-all', async () => {
+      const out: { code: string; token: string }[] = [];
+      for (const t of active) out.push({ code: t.code, token: await repo.rotateTableToken(t.id) });
+      setSheet(out);
+    });
+  };
 
   const rotate = (t: TableRow) => {
     const msg = t.hasToken
@@ -47,6 +60,16 @@ export function Tables() {
         <h1 className="text-2xl font-bold">โต๊ะและ QR Code</h1>
         <p className="text-sm text-coffee-mute">QR แต่ละโต๊ะมี token ที่ไม่ซ้ำ เมื่อสร้างใหม่ QR เดิมจะใช้ไม่ได้</p>
       </div>
+
+      <Card className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="font-medium">พิมพ์ QR ทุกโต๊ะ</p>
+          <p className="text-sm text-coffee-mute">ออก QR ใหม่ทั้งหมดและพิมพ์เป็นใบเดียว ใช้เมื่อต้องเปลี่ยนป้ายทั้งร้าน</p>
+        </div>
+        <Button disabled={!!action.busy || !data?.some((t) => t.active)} onClick={printAll}>
+          {action.busy === 'print-all' ? 'กำลังสร้าง QR…' : 'พิมพ์ QR ทุกโต๊ะ'}
+        </Button>
+      </Card>
 
       <Card className="flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-1.5 text-sm"><span className="font-medium">รหัสโต๊ะใหม่</span>
@@ -78,6 +101,25 @@ export function Tables() {
           ))}
         </div>
       ))}
+
+      <Dialog open={!!sheet} onClose={() => setSheet(null)} title="QR ทุกโต๊ะ" sheet>
+        {sheet && (
+          <div className="flex flex-col gap-4">
+            <div className="print-area grid grid-cols-2 gap-4">
+              {sheet.map((x) => (
+                <div key={x.code} className="flex break-inside-avoid flex-col items-center gap-2 rounded-[12px] border border-oat-soft p-3 text-center">
+                  <p className="text-base font-semibold">128 Home Coffee · โต๊ะ {x.code}</p>
+                  <QrImage text={menuUrl(x.token)} size={180} />
+                  <p className="text-[10px] text-coffee-mute">สแกนเพื่อสั่งที่โต๊ะ</p>
+                </div>
+              ))}
+            </div>
+            <div className="no-print flex gap-2">
+              <Button className="flex-1" onClick={() => window.print()}>พิมพ์</Button>
+            </div>
+          </div>
+        )}
+      </Dialog>
 
       <Dialog open={!!issued} onClose={() => setIssued(null)} title={issued ? `QR โต๊ะ ${issued.code}` : ''} sheet>
         {issued && (

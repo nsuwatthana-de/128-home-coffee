@@ -58,6 +58,6 @@
 @media print {
   body * { visibility: hidden !important; }
   .print-area, .print-area * { visibility: visible !important; }
-  .print-area { position: fixed; inset: 0; margin: auto; height: fit-content; }
+  .print-area { position: absolute; left: 0; top: 0; width: 100%; }
   .no-print { display: none !important; }
 }
