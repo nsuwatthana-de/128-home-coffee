@@ -41,19 +41,19 @@ export function App() {
 
             <Route path="login" element={<LoginPage />} />
 
-            <Route path="admin" element={<RequireRole roles={['owner', 'staff']}><AdminLayout /></RequireRole>}>
+            <Route path="admin" element={<RequireRole roles={['owner', 'manager', 'staff']}><AdminLayout /></RequireRole>}>
               <Route index element={<Dashboard />} />
               <Route path="pos" element={<POS />} />
               <Route path="orders" element={<Orders />} />
               <Route path="products" element={<Products />} />
               <Route path="tables" element={<Tables />} />
-              <Route path="inventory" element={<RequireRole roles={['owner']}><Inventory /></RequireRole>} />
-              <Route path="promotions" element={<RequireRole roles={['owner']}><Placeholder title="โปรโมชัน" phase="V2 (หลัง V1)" /></RequireRole>} />
-              <Route path="reports" element={<RequireRole roles={['owner']}><Reports /></RequireRole>} />
-              <Route path="settings" element={<RequireRole roles={['owner']}><Settings /></RequireRole>} />
+              <Route path="inventory" element={<RequireRole roles={['owner', 'manager']}><Inventory /></RequireRole>} />
+              <Route path="promotions" element={<RequireRole roles={['owner', 'manager']}><Placeholder title="โปรโมชัน" phase="V2 (หลัง V1)" /></RequireRole>} />
+              <Route path="reports" element={<RequireRole roles={['owner', 'manager']}><Reports /></RequireRole>} />
+              <Route path="settings" element={<RequireRole roles={['owner', 'manager']}><Settings /></RequireRole>} />
             </Route>
 
-            <Route path="kitchen" element={<RequireRole roles={['owner', 'staff', 'kitchen']}><KitchenLayout /></RequireRole>}>
+            <Route path="kitchen" element={<RequireRole roles={['owner', 'manager', 'staff', 'kitchen']}><KitchenLayout /></RequireRole>}>
               <Route index element={<Board />} />
             </Route>
 

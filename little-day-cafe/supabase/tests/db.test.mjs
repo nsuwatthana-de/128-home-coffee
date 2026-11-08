@@ -133,5 +133,15 @@ assert.deepEqual([...numbers].sort(), numbers);
 const [{ o: finalOrder }] = await anon(`select get_order_json($1) as o`, [c1.id]);
 assert.equal(finalOrder.paymentRef, 'REF-1');
 
+// 13) ผู้จัดการมีสิทธิ์เท่าเจ้าของ (ยกเว้นการแต่งตั้งบทบาท)
+const manager = '00000000-0000-0000-0000-000000000004';
+await run(`insert into auth.users (id, email) values ('${manager}','m@x'); insert into profiles (id, role) values ('${manager}','manager');`);
+await as(manager, `select adjust_stock('00000000-0000-0000-0000-0000000000e1', 1, 'adjust')`);
+await as(manager, `select create_order(null,'counter','','','cash',$1::jsonb)`, [items]);
+await expectFail(as(manager, `select set_user_role($1, 'staff')`, [kitchen]), /ไม่มีสิทธิ์/);
+await as(owner, `select set_user_role($1, 'staff')`, [kitchen]);
+const [{ role: kr }] = await q(`select role from profiles where id = '${kitchen}'`);
+assert.equal(kr, 'staff');
+
 console.log('db tests passed:', { orders: nos.length, token: token.slice(0, 6) + '…' });
 await db.close();

@@ -9,22 +9,22 @@ import type { Role } from '../types';
 interface Item { to: string; label: string; end?: boolean; roles: Role[] }
 
 const items: Item[] = [
-  { to: '/admin', label: 'ภาพรวม', end: true, roles: ['owner', 'staff'] },
-  { to: '/admin/pos', label: 'ขายหน้าร้าน', roles: ['owner', 'staff'] },
-  { to: '/admin/orders', label: 'ออเดอร์', roles: ['owner', 'staff'] },
-  { to: '/admin/products', label: 'สินค้า', roles: ['owner', 'staff'] },
-  { to: '/admin/tables', label: 'โต๊ะและ QR', roles: ['owner', 'staff'] },
-  { to: '/admin/inventory', label: 'วัตถุดิบ', roles: ['owner'] },
-  { to: '/admin/promotions', label: 'โปรโมชัน', roles: ['owner'] },
-  { to: '/admin/reports', label: 'รายงาน', roles: ['owner'] },
-  { to: '/admin/settings', label: 'ตั้งค่า', roles: ['owner'] },
+  { to: '/admin', label: 'ภาพรวม', end: true, roles: ['owner', 'manager', 'staff'] },
+  { to: '/admin/pos', label: 'ขายหน้าร้าน', roles: ['owner', 'manager', 'staff'] },
+  { to: '/admin/orders', label: 'ออเดอร์', roles: ['owner', 'manager', 'staff'] },
+  { to: '/admin/products', label: 'สินค้า', roles: ['owner', 'manager', 'staff'] },
+  { to: '/admin/tables', label: 'โต๊ะและ QR', roles: ['owner', 'manager', 'staff'] },
+  { to: '/admin/inventory', label: 'วัตถุดิบ', roles: ['owner', 'manager'] },
+  { to: '/admin/promotions', label: 'โปรโมชัน', roles: ['owner', 'manager'] },
+  { to: '/admin/reports', label: 'รายงาน', roles: ['owner', 'manager'] },
+  { to: '/admin/settings', label: 'ตั้งค่า', roles: ['owner', 'manager'] },
 ];
 
 export function AdminLayout() {
   const { session, signOut } = useAuth();
   const navigate = useNavigate();
   const visible = items.filter((i) => session && i.roles.includes(session.role));
-  const roleLabel = session?.role === 'owner' ? 'เจ้าของ' : 'พนักงาน';
+  const roleLabel = session?.role === 'owner' ? 'เจ้าของ' : session?.role === 'manager' ? 'ผู้จัดการ' : session?.role === 'kitchen' ? 'ครัว' : 'พนักงาน';
 
   return (
     <div className="flex min-h-dvh bg-ivory">

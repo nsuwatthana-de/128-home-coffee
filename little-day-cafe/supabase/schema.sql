@@ -7,7 +7,7 @@ create sequence if not exists order_seq;
 -- ---------- บัญชีพนักงาน ----------
 create table if not exists profiles (
   id           uuid primary key references auth.users(id) on delete cascade,
-  role         text not null check (role in ('owner', 'staff', 'kitchen')),
+  role         text not null check (role in ('owner', 'manager', 'staff', 'kitchen')),
   display_name text,
   created_at   timestamptz not null default now()
 );
@@ -216,7 +216,7 @@ alter table expenses enable row level security;
 alter table shop_settings enable row level security;
 
 create policy profiles_self_read on profiles for select to authenticated
-  using (id = auth.uid() or current_role_name() = 'owner');
+  using (id = auth.uid() or current_role_name() in ('owner', 'manager'));
 
 -- เมนูอ่านได้ทุกคน (ลูกค้าไม่ต้องล็อกอิน) แต่แก้ไขได้เฉพาะเจ้าของและพนักงาน
 create policy categories_read on categories for select to anon, authenticated using (true);
@@ -224,49 +224,49 @@ create policy products_read on products for select to anon, authenticated using 
 create policy options_read on product_options for select to anon, authenticated using (true);
 create policy values_read on product_option_values for select to anon, authenticated using (true);
 create policy categories_write on categories for all to authenticated
-  using (current_role_name() in ('owner', 'staff')) with check (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff')) with check (current_role_name() in ('owner', 'manager', 'staff'));
 create policy products_write on products for all to authenticated
-  using (current_role_name() in ('owner', 'staff')) with check (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff')) with check (current_role_name() in ('owner', 'manager', 'staff'));
 create policy options_write on product_options for all to authenticated
-  using (current_role_name() in ('owner', 'staff')) with check (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff')) with check (current_role_name() in ('owner', 'manager', 'staff'));
 create policy values_write on product_option_values for all to authenticated
-  using (current_role_name() in ('owner', 'staff')) with check (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff')) with check (current_role_name() in ('owner', 'manager', 'staff'));
 
 create policy tables_staff on tables for all to authenticated
-  using (current_role_name() in ('owner', 'staff')) with check (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff')) with check (current_role_name() in ('owner', 'manager', 'staff'));
 
 -- ออเดอร์: ครัวและพนักงานเห็นได้ ลูกค้าอ่านผ่าน get_order_json เท่านั้น
 -- การเขียนทั้งหมดทำผ่าน function ที่ตรวจสิทธิ์และ transaction แล้ว จึงไม่มี policy เขียนโดยตรง
 create policy orders_staff_read on orders for select to authenticated
-  using (current_role_name() in ('owner', 'staff', 'kitchen'));
+  using (current_role_name() in ('owner', 'manager', 'staff', 'kitchen'));
 create policy order_items_staff_read on order_items for select to authenticated
-  using (current_role_name() in ('owner', 'staff', 'kitchen'));
+  using (current_role_name() in ('owner', 'manager', 'staff', 'kitchen'));
 create policy order_item_options_staff_read on order_item_options for select to authenticated
-  using (current_role_name() in ('owner', 'staff', 'kitchen'));
+  using (current_role_name() in ('owner', 'manager', 'staff', 'kitchen'));
 create policy payments_staff_read on payments for select to authenticated
-  using (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff'));
 
 create policy inventory_read on inventory for select to authenticated
-  using (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff'));
 create policy inventory_owner_write on inventory for all to authenticated
-  using (current_role_name() = 'owner') with check (current_role_name() = 'owner');
+  using (current_role_name() in ('owner', 'manager')) with check (current_role_name() in ('owner', 'manager'));
 create policy recipes_read on recipes for select to authenticated
-  using (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff'));
 create policy recipes_owner_write on recipes for all to authenticated
-  using (current_role_name() = 'owner') with check (current_role_name() = 'owner');
+  using (current_role_name() in ('owner', 'manager')) with check (current_role_name() in ('owner', 'manager'));
 create policy recipe_items_read on recipe_items for select to authenticated
-  using (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff'));
 create policy recipe_items_owner_write on recipe_items for all to authenticated
-  using (current_role_name() = 'owner') with check (current_role_name() = 'owner');
+  using (current_role_name() in ('owner', 'manager')) with check (current_role_name() in ('owner', 'manager'));
 create policy inv_tx_read on inventory_transactions for select to authenticated
-  using (current_role_name() in ('owner', 'staff'));
+  using (current_role_name() in ('owner', 'manager', 'staff'));
 create policy expenses_owner on expenses for all to authenticated
-  using (current_role_name() = 'owner') with check (current_role_name() = 'owner');
+  using (current_role_name() in ('owner', 'manager')) with check (current_role_name() in ('owner', 'manager'));
 
 -- ข้อมูลร้านอ่านได้ทุกคน (มีเบอร์ PromptPay ที่จะแสดงใน QR อยู่แล้ว) แก้ไขได้เฉพาะเจ้าของ
 create policy settings_read on shop_settings for select to anon, authenticated using (true);
 create policy settings_owner_write on shop_settings for update to authenticated
-  using (current_role_name() = 'owner') with check (current_role_name() = 'owner');
+  using (current_role_name() in ('owner', 'manager')) with check (current_role_name() in ('owner', 'manager'));
 
 -- ---------- Function: โต๊ะและ token ----------
 create or replace function resolve_table_token(p_token text) returns jsonb
@@ -285,7 +285,7 @@ as $$
 declare
   v_token text;
 begin
-  perform require_role(array['owner', 'staff']);
+  perform require_role(array['owner', 'manager', 'staff']);
   update table_tokens set revoked_at = now() where table_id = p_table and revoked_at is null;
   v_token := translate(encode(gen_random_bytes(18), 'base64'), '+/=', '-_');
   insert into table_tokens (table_id, token_hash)
@@ -322,7 +322,7 @@ declare
 begin
   if p_channel not in ('dine_in', 'takeaway', 'counter') then raise exception 'ช่องทางไม่ถูกต้อง'; end if;
   if p_method not in ('cash', 'promptpay') then raise exception 'วิธีชำระไม่ถูกต้อง'; end if;
-  if p_channel = 'counter' then perform require_role(array['owner', 'staff']); end if;
+  if p_channel = 'counter' then perform require_role(array['owner', 'manager', 'staff']); end if;
   if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 then
     raise exception 'ไม่มีรายการในออเดอร์';
   end if;
@@ -472,7 +472,7 @@ begin
   if not found then raise exception 'ไม่พบออเดอร์'; end if;
 
   if p_to = 'cancelled' then
-    perform require_role(array['owner', 'staff']);
+    perform require_role(array['owner', 'manager', 'staff']);
     if v_order.status in ('completed', 'cancelled') then raise exception 'เปลี่ยนสถานะนี้ไม่ได้'; end if;
     if v_order.payment_status = 'paid' then raise exception 'ออเดอร์ที่ชำระแล้วยกเลิกไม่ได้ (ต้องคืนเงินก่อน)'; end if;
 
@@ -488,7 +488,7 @@ begin
       values (v_item.ingredient_id, v_item.back, 'cancel', p_id, auth.uid());
     end loop;
   else
-    perform require_role(array['owner', 'staff', 'kitchen']);
+    perform require_role(array['owner', 'manager', 'staff', 'kitchen']);
     v_ok := (v_order.status = 'new' and p_to = 'accepted')
          or (v_order.status = 'accepted' and p_to = 'preparing')
          or (v_order.status = 'preparing' and p_to = 'ready')
@@ -506,7 +506,7 @@ as $$
 declare
   v_order orders;
 begin
-  perform require_role(array['owner', 'staff']);
+  perform require_role(array['owner', 'manager', 'staff']);
   if p_method not in ('cash', 'promptpay') then raise exception 'วิธีชำระไม่ถูกต้อง'; end if;
   select * into v_order from orders where id = p_id for update;
   if not found then raise exception 'ไม่พบออเดอร์'; end if;
@@ -526,7 +526,7 @@ create or replace function adjust_stock(p_id uuid, p_delta numeric, p_reason tex
 language plpgsql security definer set search_path = public, extensions
 as $$
 begin
-  perform require_role(array['owner', 'staff']);
+  perform require_role(array['owner', 'manager', 'staff']);
   if p_reason not in ('purchase', 'adjust', 'waste') then raise exception 'เหตุผลไม่ถูกต้อง'; end if;
   update inventory set qty = qty + p_delta, updated_at = now() where id = p_id;
   if not found then raise exception 'ไม่พบวัตถุดิบ'; end if;
@@ -540,3 +540,16 @@ alter publication supabase_realtime add table orders;
 alter publication supabase_realtime add table order_items;
 alter publication supabase_realtime add table products;
 alter publication supabase_realtime add table tables;
+
+-- ---------- แต่งตั้งบทบาท (เฉพาะเจ้าของ) ----------
+-- ผู้จัดการมีสิทธิ์เท่าเจ้าของทุกอย่าง ยกเว้นการแต่งตั้งบทบาท
+create or replace function set_user_role(p_user uuid, p_role text) returns void
+language plpgsql security definer set search_path = public, extensions
+as $$
+begin
+  perform require_role(array['owner']);
+  if p_role not in ('owner', 'manager', 'staff', 'kitchen') then raise exception 'บทบาทไม่ถูกต้อง'; end if;
+  insert into profiles (id, role) values (p_user, p_role)
+  on conflict (id) do update set role = excluded.role;
+end $$;
+grant execute on function set_user_role(uuid, text) to authenticated;

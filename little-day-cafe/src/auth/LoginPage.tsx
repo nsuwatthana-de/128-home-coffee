@@ -9,6 +9,7 @@ import type { Role } from '../types';
 
 const demoRoles: { role: Role; label: string; hint: string }[] = [
   { role: 'owner', label: 'เจ้าของร้าน', hint: 'ทุกหน้า' },
+  { role: 'manager', label: 'ผู้จัดการ', hint: 'ทุกหน้า ยกเว้นการแต่งตั้งบทบาท' },
   { role: 'staff', label: 'พนักงาน', hint: 'ออเดอร์ POS สินค้า โต๊ะ' },
   { role: 'kitchen', label: 'ครัว', hint: 'จอครัวเท่านั้น' },
 ];

@@ -8,7 +8,7 @@ import type { ShopSettings } from '../../types';
 
 export function Settings() {
   const { session } = useAuth();
-  const readOnly = session?.role !== 'owner';
+  const readOnly = session?.role !== 'owner' && session?.role !== 'manager';
   const [s, setS] = useState<ShopSettings | null>(null);
   const [loadErr, setLoadErr] = useState('');
   const [localErr, setLocalErr] = useState('');
@@ -40,7 +40,7 @@ export function Settings() {
     <div className="flex flex-col gap-5">
       <div>
         <h1 className="text-2xl font-bold">ตั้งค่าร้าน</h1>
-        <p className="text-sm text-coffee-mute">{readOnly ? 'เฉพาะเจ้าของร้านที่แก้ไขได้' : 'ค่าเหล่านี้ใช้ในหน้าลูกค้าและ QR ชำระเงิน'}</p>
+        <p className="text-sm text-coffee-mute">{readOnly ? 'เฉพาะเจ้าของและผู้จัดการที่แก้ไขได้' : 'ค่าเหล่านี้ใช้ในหน้าลูกค้าและ QR ชำระเงิน'}</p>
       </div>
       <Card className="grid gap-4 md:grid-cols-2">
         {field('ชื่อร้าน', 'shopName')}

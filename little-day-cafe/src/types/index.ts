@@ -1,6 +1,6 @@
 // ชนิดข้อมูลให้ตรงกับ ER ใน docs/ARCHITECTURE.md
 export type Station = 'beverage' | 'bakery';
-export type Role = 'owner' | 'staff' | 'kitchen';
+export type Role = 'owner' | 'manager' | 'staff' | 'kitchen';
 
 export interface Category {
   id: string;
